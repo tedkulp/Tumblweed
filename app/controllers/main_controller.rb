@@ -5,8 +5,6 @@ class MainController < UISplitViewController
                           withBarButtonItem:barButtonItem,
                           forPopoverController:pc)
     barButtonItem.setTitle("List View")
-    NSLog("%@", barButtonItem)
-    NSLog("willHideViewController")
     navigationItem.leftBarButtonItem = barButtonItem
   end
 
@@ -14,8 +12,6 @@ class MainController < UISplitViewController
                           willShowViewController:aViewController,
                           invalidatingBarButtonItem:barButtonItem)
     navigationItem.leftBarButtonItem = nil
-    NSLog("%@", barButtonItem)
-    NSLog("willShowViewController")
   end
 
 end

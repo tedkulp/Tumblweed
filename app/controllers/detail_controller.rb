@@ -19,7 +19,7 @@ class DetailController < UIViewController
   end
 
   def splitViewController(svc, willHideViewController:vc, withBarButtonItem:barButtonItem, forPopoverController:pc)
-    barButtonItem.title = "Menu"
+    barButtonItem.title = "Posts"
     self.navigationItem.setLeftBarButtonItem(barButtonItem)
     self.popoverViewController = pc
   end
