@@ -7,7 +7,7 @@ class SubjectController < UITableViewController
       if response.ok?
         json = BubbleWrap::JSON.parse(response.body.to_str)
         json['response']['posts'].each do |post_data|
-          new_post = Post.new
+          new_post = createPostFromType(post_data['type'])
           new_post.text = post_data['text']
           new_post.post_url = post_data['post_url']
           @posts << new_post
@@ -21,7 +21,20 @@ class SubjectController < UITableViewController
     end
   end
 
+  def createPostFromType(type)
+    begin
+      klass = Object.const_get(type.capitalize)
+    rescue
+      # In case there is a new post type we didn't account for.
+      # Fall back to the generic Post so we at least show
+      # something.
+      klass = Object.const_get('Post')
+    end
+    klass.new
+  end
+
   def apiKey
+    #TODO: WTF? Move me!
     "XDZviJJFTjuPWwHbVybM7pRN05IAEkyCTKlDGAdQYA9zqaKZrL"
   end
 
@@ -33,17 +46,32 @@ class SubjectController < UITableViewController
     1
   end
 
-  def tableView(tableView, numberOfRowsInSection:section) 
+  def tableView(tableView, numberOfRowsInSection:section)
     @posts.length
   end
 
   def tableView(tableView, cellForRowAtIndexPath:path)
-    cell = tableView.dequeueReusableCellWithIdentifier("cell") || UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier:"cell")
-    cell.textLabel.text = @posts[path.row].text
-    cell
+    klass = getClassObjectForIndexPath(path)
+    klass.createCellWithTableView(tableView, withPost:@posts[path.row])
   end
 
-  def tableView(tableView, didSelectRowAtIndexPath:path)  
+  def tableView(tableView, didSelectRowAtIndexPath:path)
     @delegate.openURL(@posts[path.row].post_url) if @delegate.respond_to?'openURL'
+  end
+
+  def tableView(tableView, heightForRowAtIndexPath:path)
+    getClassObjectForIndexPath(path).height
+  end
+
+  def getClassObjectForIndexPath(path)
+    begin
+      klass = Object.const_get(@posts[path.row].class.to_s + 'Cell')
+    rescue
+      # In case there is a new post type we didn't account for.
+      # Fall back to the generic PostCell so we at least show
+      # something.
+      klass = Object.const_get('PostCell')
+    end
+    klass
   end
 end

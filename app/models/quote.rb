@@ -1,0 +1,3 @@
+class Quote < Post
+
+end
