@@ -1,8 +1,12 @@
 class PostCell < UITableViewCell
+  attr_accessor :post
+
   def self.createCellWithTableView(tableView, withPost:post)
-    tableView.dequeueReusableCellWithIdentifier(reuseIdentifier) || begin
+    cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier) || begin
       alloc.initWithFrame([[0,0], [width, height]])
     end
+    cell.updateViewsFromPost(post)
+    cell
   end
 
   def self.reuseIdentifier
@@ -13,21 +17,45 @@ class PostCell < UITableViewCell
     44
   end
 
+  def height
+    self.class.height
+  end
+
   def self.width
     320
   end
 
+  def width
+    self.class.width
+  end
+
   def initWithFrame(frame)
     if super
-      addSubview(mySubview)
+      addSubviews(mySubviews)
     end
     self
   end
 
-  def mySubview
-    @mySubview ||= begin
-      # define a subview here
+  def addSubviews(*views)
+    views.flatten.each { |view| addSubview(view) }
+  end
+
+  def mySubviews
+    @mySubviews ||= begin
+      setupSubviewArray
     end
+  end
+
+  def setupSubviewArray
+    #TODO: Some kind of generic display
+  end
+
+  def prepareForReuse
+    #Not sure if we'll need this later
+  end
+
+  def updateViewsFromPost(post)
+    #TODO: Fill in said generic display
   end
 
   def layoutSubviews

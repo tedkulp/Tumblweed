@@ -7,9 +7,7 @@ class SubjectController < UITableViewController
       if response.ok?
         json = BubbleWrap::JSON.parse(response.body.to_str)
         json['response']['posts'].each do |post_data|
-          new_post = createPostFromType(post_data['type'])
-          new_post.text = post_data['text']
-          new_post.post_url = post_data['post_url']
+          new_post = createPostFromType(post_data['type'], dataHash:post_data)
           @posts << new_post
         end
         tableView.reloadData
@@ -21,7 +19,7 @@ class SubjectController < UITableViewController
     end
   end
 
-  def createPostFromType(type)
+  def createPostFromType(type, dataHash:post_data)
     begin
       klass = Object.const_get(type.capitalize)
     rescue
@@ -30,7 +28,7 @@ class SubjectController < UITableViewController
       # something.
       klass = Object.const_get('Post')
     end
-    klass.new
+    klass.new(post_data || {})
   end
 
   def apiKey
@@ -51,8 +49,7 @@ class SubjectController < UITableViewController
   end
 
   def tableView(tableView, cellForRowAtIndexPath:path)
-    klass = getClassObjectForIndexPath(path)
-    klass.createCellWithTableView(tableView, withPost:@posts[path.row])
+    getCellForIndexPath(path)
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:path)
@@ -60,7 +57,12 @@ class SubjectController < UITableViewController
   end
 
   def tableView(tableView, heightForRowAtIndexPath:path)
-    getClassObjectForIndexPath(path).height
+    getCellForIndexPath(path).height
+  end
+
+  def getCellForIndexPath(path)
+    klass = getClassObjectForIndexPath(path)
+    klass.createCellWithTableView(tableView, withPost:@posts[path.row])
   end
 
   def getClassObjectForIndexPath(path)
