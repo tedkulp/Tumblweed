@@ -23,7 +23,6 @@ class PhotoCell < PostCell
 
     @caption.text = post.caption.gsub(/<\/?[^>]*>/, '')
     @caption.setFrame(CGRectMake(5, 25, 320 - (5 * 2) - 65, [size.height, 67 - 25].max))
-    # @caption.layer.setBorderWidth(2.0)
     @caption.numberOfLines = 0
     @caption.sizeToFit
   end
