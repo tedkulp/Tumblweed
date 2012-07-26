@@ -1,30 +1,40 @@
 class PhotoCell < PostCell
 
   def height
-    67
+    80
   end
 
   def setupSubviewArray
-    @img = UIImageView.alloc.initWithFrame([[320 - 64 - 1, 1], [64, 64]])
-    @blog_name = UILabel.alloc.initWithFrame([[5, 5], [320 - 64 - 1, 20]])
+    @img = UIImageView.alloc.initWithFrame(CGRectZero)
+    @blog_name = UILabel.alloc.initWithFrame(CGRectZero)
     @caption = UILabel.alloc.initWithFrame(CGRectZero)
-    @caption.setLineBreakMode(UILineBreakModeWordWrap)
-    @caption.setMinimumFontSize(12)
-    @caption.setFont(UIFont.systemFontOfSize(12))
-    [@img, @blog_name, @caption]
+    @type_img = UIImageView.alloc.initWithFrame(CGRectZero)
+
+    [@img, @blog_name, @caption, @type_img]
   end
 
   def updateViewsFromPost(post)
-    @img.image = UIImage.imageWithData(NSData.dataWithContentsOfURL(NSURL.URLWithString(post.photos[0]['alt_sizes'].last['url'])))
+    @blog_name.frame = [[CELL_PADDING, CELL_PADDING], [150, 20]]
     @blog_name.text = post.blog_name
+    @blog_name.setMinimumFontSize(16)
+    @blog_name.setFont(UIFont.systemFontOfSize(16))
 
-    constraint = CGSizeMake(320 - (5 * 2) - 65, 20000.0);
-    size = post.caption.sizeWithFont(UIFont.systemFontOfSize(12), constrainedToSize:constraint, lineBreakMode:UILineBreakModeWordWrap)
+    @img.frame = [[CELL_PADDING, height - CELL_PADDING - IMAGE_HEIGHT - 1], [IMAGE_HEIGHT, IMAGE_HEIGHT]]
+    @img.contentMode = UIViewContentModeScaleAspectFit
+    @img.image = UIImage.imageWithData(NSData.dataWithContentsOfURL(NSURL.URLWithString(post.photos[0]['alt_sizes'].last['url'])))
+
+    constraint = CGSizeMake(CELL_WIDTH - @img.frame.size.width - (CELL_PADDING * 2), IMAGE_HEIGHT.to_f);
+    size = post.caption.sizeWithFont(UIFont.systemFontOfSize(13), constrainedToSize:constraint, lineBreakMode:UILineBreakModeWordWrap)
 
     @caption.text = post.caption.gsub(/<\/?[^>]*>/, '')
-    @caption.setFrame(CGRectMake(5, 25, 320 - (5 * 2) - 65, [size.height, 67 - 25].max))
-    @caption.numberOfLines = 0
+    @caption.setMinimumFontSize(13)
+    @caption.setFont(UIFont.systemFontOfSize(13))
     @caption.sizeToFit
+    @caption.frame = [[@img.frame.size.width + CELL_PADDING + CELL_PADDING, height - CELL_PADDING - IMAGE_HEIGHT - 1], [CELL_WIDTH - @img.frame.size.width + CELL_PADDING, IMAGE_HEIGHT]]
+    @caption.numberOfLines = 0
+
+    @type_img.image = UIImage.imageWithContentsOfFile(App.resources_path + '/Photo.png')
+    @type_img.frame = [[CELL_WIDTH - @type_img.image.size.width, 0], [@type_img.image.size.width, @type_img.image.size.height]]
   end
 
 end

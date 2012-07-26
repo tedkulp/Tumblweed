@@ -1,6 +1,10 @@
 class PostCell < UITableViewCell
   attr_accessor :post
 
+  CELL_PADDING = 2
+  CELL_WIDTH = 320
+  IMAGE_HEIGHT = 50
+
   def self.createCellWithTableView(tableView, withPost:post)
     cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier) || begin
       alloc.initWithFrame([[0,0], [width, height]])
