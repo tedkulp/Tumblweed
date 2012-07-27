@@ -3,15 +3,13 @@ class DetailController < UIViewController
 
   def viewWillAppear(animated)
     self.navigationController.navigationItem.leftBarButtonItem = UIBarButtonItem.alloc.initWithTitle("Select", style:UIBarButtonItemStyleBordered , target:self, action:'select')
-    self.view.backgroundColor = UIColor.whiteColor
-    @webView = UIWebView.alloc.initWithFrame(self.view.bounds)
-    @webView.alpha = 0
-    @webView.delegate = self
-    self.view.addSubview(@webView)
+    # @webView = UIWebView.alloc.initWithFrame(self.view.bounds)
+    # @webView.alpha = 0
+    # @webView.delegate = self
+    # self.view.addSubview(@webView)
 
-    @activityIndicator = UIActivityIndicatorView.alloc.initWithActivityIndicatorStyle(UIActivityIndicatorViewStyleGray)
-    @activityIndicator.center = self.view.center
-    self.view.addSubview(@activityIndicator)
+    # @activityIndicator = UIActivityIndicatorView.alloc.initWithActivityIndicatorStyle(UIActivityIndicatorViewStyleGray)
+    # @activityIndicator.center = self.view.center
   end
 
   def shouldAutorotateToInterfaceOrientation(*)
@@ -29,30 +27,36 @@ class DetailController < UIViewController
     self.popoverViewController = nil
   end
 
-  def openURL(url)
-    if !(/http:\/\/(.*)\// =~ url)
-      url = "http://" + url + "/"
-    end
-
-    UIView.animateWithDuration(0.5, animations: -> do
-      @webView.alpha = 0
-    end
-    )
-
-    @webView.loadRequest(NSURLRequest.requestWithURL(NSURL.URLWithString(url)))
-    if self.popoverViewController
-      self.popoverViewController.dismissPopoverAnimated(true)
-    end
+  def openDetailViewFromPost(post)
+    self.view = PostView.createPostViewFromPost(post)
+    self.view.backgroundColor = UIColor.whiteColor
+    self.view.displayContent
   end
 
-  def webViewDidStartLoad(webview)
-    @activityIndicator.startAnimating
-  end
+  # def openURL(url)
+  #   if !(/http:\/\/(.*)\// =~ url)
+  #     url = "http://" + url + "/"
+  #   end
 
-  def webViewDidFinishLoad(webview)
-    @activityIndicator.stopAnimating
-    UIView.animateWithDuration(0.5, animations: -> do
-      @webView.alpha = 1
-    end)
-  end
+  #   UIView.animateWithDuration(0.5, animations: -> do
+  #     @webView.alpha = 0
+  #   end
+  #   )
+
+  #   @webView.loadRequest(NSURLRequest.requestWithURL(NSURL.URLWithString(url)))
+  #   if self.popoverViewController
+  #     self.popoverViewController.dismissPopoverAnimated(true)
+  #   end
+  # end
+
+  # def webViewDidStartLoad(webview)
+  #   @activityIndicator.startAnimating
+  # end
+
+  # def webViewDidFinishLoad(webview)
+  #   @activityIndicator.stopAnimating
+  #   UIView.animateWithDuration(0.5, animations: -> do
+  #     @webView.alpha = 1
+  #   end)
+  # end
 end

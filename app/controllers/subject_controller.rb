@@ -3,7 +3,13 @@ class SubjectController < UITableViewController
 
   def viewDidLoad
     @posts = []
-    BubbleWrap::HTTP.get("http://api.tumblr.com/v2/blog/tedkulp.tumblr.com/posts?api_key=#{apiKey}&notes_info=true&reblog_info=true") do |response|
+    # p "here"
+
+    # @responseData = NSMutableData.data
+
+    # request = NSURLRequest.requestWithURL(NSURL.URLWithString("http://api.tumblr.com/v2/blog/tedkulp.tumblr.com/posts?api_key=#{apiKey}&notes_info=true&reblog_info=true"))
+    # NSURLConnection.alloc.initWithRequest(request, delegate:self)
+    BubbleWrap::HTTP.get("http://api.tumblr.com/v2/blog/tedkulp.tumblr.com/posts?api_key=#{apiKey}&notes_info=true&reblog_info=true", {}) do |response|
       if response.ok?
         json = BubbleWrap::JSON.parse(response.body.to_str)
         json['response']['posts'].each do |post_data|
@@ -18,6 +24,34 @@ class SubjectController < UITableViewController
       end
     end
   end
+
+  # def connection(connection, didReceiveResponse:response)
+  #   @responseData.setLength(0)
+  # end
+
+  # def connection(connection, didReceiveData:data)
+  #   @responseData.appendData(data)
+  # end
+
+  # def connection(connection, didFailWithError:error)
+  #   @responseData = nil
+  # end
+
+  # def connectionDidFinishLoading(connection)
+  #   unless @responseData.nil?
+  #     responseString = NSString.alloc.initWithData(@responseData, encoding:NSUTF8StringEncoding)
+
+  #     p responseString.to_s
+  #     json = BubbleWrap::JSON.parse(responseString.to_s)
+  #     json['response']['posts'].each do |post_data|
+  #       new_post = createPostFromType(post_data['type'], dataHash:post_data)
+  #       @posts << new_post
+  #     end
+  #     tableView.reloadData
+
+  #     @responseData = nil
+  #   end
+  # end
 
   def createPostFromType(type, dataHash:post_data)
     begin
@@ -53,7 +87,8 @@ class SubjectController < UITableViewController
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:path)
-    @delegate.openURL(@posts[path.row].post_url) if @delegate.respond_to?'openURL'
+    #@delegate.openURL(@posts[path.row].post_url) if @delegate.respond_to?'openURL'
+    @delegate.openDetailViewFromPost(@posts[path.row])
   end
 
   def tableView(tableView, heightForRowAtIndexPath:path)

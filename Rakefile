@@ -17,6 +17,7 @@ Motion::Project::App.setup do |app|
   types.each do |type|
     app.files_dependencies "./app/models/#{type}.rb" => './app/models/post.rb'
     app.files_dependencies "./app/cells/#{type}_cell.rb" => './app/cells/post_cell.rb'
+    app.files_dependencies "./app/views/#{type}_view.rb" => './app/views/post_view.rb'
     app.files_dependencies './app/controllers/subject_controller.rb' => "./app/models/#{type}.rb"
     app.files_dependencies './app/controllers/subject_controller.rb' => "./app/cells/#{type}_cell.rb"
   end

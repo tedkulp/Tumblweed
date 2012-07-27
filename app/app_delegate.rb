@@ -1,4 +1,6 @@
 class AppDelegate
+  attr_accessor :detail_nav
+
   def application(application, didFinishLaunchingWithOptions:launchOptions)
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
 

@@ -7,7 +7,7 @@ class PostCell < UITableViewCell
 
   def self.createCellWithTableView(tableView, withPost:post)
     cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier) || begin
-      alloc.initWithFrame([[0,0], [width, height]])
+      alloc.initWithFrame(CGRectZero)
     end
     cell.updateViewsFromPost(post)
     cell
@@ -17,27 +17,24 @@ class PostCell < UITableViewCell
     to_s
   end
 
-  def self.height
-    44
-  end
-
   def height
-    self.class.height
-  end
-
-  def self.width
-    320
+    50
   end
 
   def width
-    self.class.width
+    CELL_WIDTH
   end
 
   def initWithFrame(frame)
     if super
+      setDefaultFrame
       addSubviews(mySubviews)
     end
     self
+  end
+
+  def setDefaultFrame
+    frame = [[0, 0], [height, width]]
   end
 
   def addSubviews(*views)

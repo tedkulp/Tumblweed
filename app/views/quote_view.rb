@@ -1,0 +1,3 @@
+class QuoteView < PostView
+
+end
