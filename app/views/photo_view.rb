@@ -27,10 +27,10 @@ class PhotoView < PostView
   end
 
   def webView(webView, shouldStartLoadWithRequest:request, navigationType:navigationType)
-    if "about".compare(request.URL.scheme) != NSOrderedSame
+    if request.URL.scheme.downcase != 'about'
       p request.URL.absoluteString
     end
-    "about".compare(request.URL.scheme) == NSOrderedSame
+    request.URL.scheme == "about"
   end
 
 end
