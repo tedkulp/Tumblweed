@@ -13,6 +13,22 @@ Motion::Project::App.setup do |app|
   app.name          = 'Tumblweed'
   app.identifier    = 'net.shiftrefresh.tumblweed'
   app.device_family = :ipad
+  app.frameworks    << 'Security'
+
+  app.pods do
+    pod 'RSOAuthEngine'
+    pod 'Lockbox'
+    pod 'JSONKit'
+  end
+
+  app.entitlements['keychain-access-groups'] = [
+    app.seed_id + '.' + app.identifier
+  ]
+
+  app.info_plist['OAuthKeyHash'] = {
+    'token' => 'XDZviJJFTjuPWwHbVybM7pRN05IAEkyCTKlDGAdQYA9zqaKZrL',
+    'tokenSecret' => 'T5N6v5LQ9130GIuvjJVK5FgmJqcF2Jj3fj99Xyyk4QH0tYNdYv'
+  }
 
   types.each do |type|
     app.files_dependencies "./app/models/#{type}.rb" => './app/models/post.rb'

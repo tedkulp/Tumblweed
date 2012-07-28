@@ -1,28 +1,54 @@
 class SubjectController < UITableViewController
   attr_accessor :delegate
+  attr_accessor :tumblr
 
   def viewDidLoad
+    super
+
     @posts = []
-    # p "here"
+    @tumblr = TumblrEngine.alloc.initWithDelegate(self, consumerKey:configToken, consumerSecret:configTokenSecret)
 
-    # @responseData = NSMutableData.data
-
-    # request = NSURLRequest.requestWithURL(NSURL.URLWithString("http://api.tumblr.com/v2/blog/tedkulp.tumblr.com/posts?api_key=#{apiKey}&notes_info=true&reblog_info=true"))
-    # NSURLConnection.alloc.initWithRequest(request, delegate:self)
-    BubbleWrap::HTTP.get("http://api.tumblr.com/v2/blog/tedkulp.tumblr.com/posts?api_key=#{apiKey}&notes_info=true&reblog_info=true", {}) do |response|
-      if response.ok?
-        json = BubbleWrap::JSON.parse(response.body.to_str)
+    if @tumblr.isAuthenticated
+      @tumblr.getDashboardEntries(lambda { |thing|
+        json = thing.responseString.to_s.objectFromJSONString
         json['response']['posts'].each do |post_data|
           new_post = createPostFromType(post_data['type'], dataHash:post_data)
           @posts << new_post
         end
         tableView.reloadData
-      elsif response.status_code.to_s =~ /40\d/
-        App.alert("Login failed")
-      else
-        App.alert(response.error_message)
-      end
+      }, onError:lambda { |err|
+        p 'err'
+        p err.code
+        p err.domain
+        p err.userInfo
+      })
+    else
+      @tumblr.authenticateWithCompletionBlock lambda { |something|
+        @tumblr.getDashboardEntries(lambda { |thing|
+          p thing
+        }, onError:lambda { |err|
+          p 'err'
+          p err.code
+          p err.domain
+          p err.userInfo
+        })
+      }
+      @tumblr.authenticateWithUsername('tumblr@wishy.org', password:'B0l1U2m0')
+      p 'Not signed in'
     end
+  end
+
+  def viewDidUnload
+    @tumblr = nil
+    super
+  end
+
+  def tumblrEngineNeedsAuthentication(engine)
+    p 'needs auth'
+  end
+
+  def tumblrEngine(engine, statusUpdate:message)
+    p 'status update: ' + message
   end
 
   # def connection(connection, didReceiveResponse:response)
@@ -65,9 +91,12 @@ class SubjectController < UITableViewController
     klass.new(post_data || {})
   end
 
-  def apiKey
-    #TODO: WTF? Move me!
-    "XDZviJJFTjuPWwHbVybM7pRN05IAEkyCTKlDGAdQYA9zqaKZrL"
+  def configToken
+    NSBundle.mainBundle.objectForInfoDictionaryKey('OAuthKeyHash')['token']
+  end
+
+  def configTokenSecret
+    NSBundle.mainBundle.objectForInfoDictionaryKey('OAuthKeyHash')['tokenSecret']
   end
 
   def shouldAutorotateToInterfaceOrientation(*)
