@@ -43,6 +43,14 @@ class SubjectController < UITableViewController
     super
   end
 
+  def shouldAutorotateToInterfaceOrientation(*)
+    true
+  end
+
+  def numberOfSectionsInTableView(tableView)
+    1
+  end
+
   def tumblrEngineNeedsAuthentication(engine)
     p 'needs auth'
   end
@@ -50,34 +58,6 @@ class SubjectController < UITableViewController
   def tumblrEngine(engine, statusUpdate:message)
     p 'status update: ' + message
   end
-
-  # def connection(connection, didReceiveResponse:response)
-  #   @responseData.setLength(0)
-  # end
-
-  # def connection(connection, didReceiveData:data)
-  #   @responseData.appendData(data)
-  # end
-
-  # def connection(connection, didFailWithError:error)
-  #   @responseData = nil
-  # end
-
-  # def connectionDidFinishLoading(connection)
-  #   unless @responseData.nil?
-  #     responseString = NSString.alloc.initWithData(@responseData, encoding:NSUTF8StringEncoding)
-
-  #     p responseString.to_s
-  #     json = BubbleWrap::JSON.parse(responseString.to_s)
-  #     json['response']['posts'].each do |post_data|
-  #       new_post = createPostFromType(post_data['type'], dataHash:post_data)
-  #       @posts << new_post
-  #     end
-  #     tableView.reloadData
-
-  #     @responseData = nil
-  #   end
-  # end
 
   def createPostFromType(type, dataHash:post_data)
     begin
@@ -97,14 +77,6 @@ class SubjectController < UITableViewController
 
   def configTokenSecret
     NSBundle.mainBundle.objectForInfoDictionaryKey('OAuthKeyHash')['tokenSecret']
-  end
-
-  def shouldAutorotateToInterfaceOrientation(*)
-    true
-  end
-
-  def numberOfSectionsInTableView(tableView)
-    1
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
