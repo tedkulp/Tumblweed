@@ -10,6 +10,21 @@ class MainController < UIViewController
     @button_bar = UIView.alloc.initWithFrame(CGRectZero)
     @button_bar.backgroundColor = UIColor.darkGrayColor
     @button_bar.autoresizingMask = UIViewAutoresizingFlexibleHeight
+
+    @home_button = UIImageView.alloc.initWithImage(UIImage.imageNamed("dark_home"))
+    @home_button.frame = [[BAR_WIDTH / 2 - @home_button.image.size.width / 2, 15], [@home_button.image.size.width, @home_button.image.size.height]]
+    @button_bar.addSubview(@home_button)
+
+    size = "Dashboard".sizeWithFont(UIFont.systemFontOfSize(12))
+    @home_text = UILabel.alloc.init
+    @home_text.frame = [[BAR_WIDTH / 2 - size.width / 2, 42], [size.width, size.height]]
+    @home_text.text = "Dashboard"
+    @home_text.setMinimumFontSize(12)
+    @home_text.setFont(UIFont.systemFontOfSize(12))
+    @home_text.backgroundColor = UIColor.darkGrayColor
+    @home_text.color = UIColor.blackColor
+    @button_bar.addSubview(@home_text)
+
     @base_view.addSubview(@button_bar)
 
     @content_view = UITableView.alloc.initWithFrame(CGRectZero)
@@ -19,6 +34,7 @@ class MainController < UIViewController
     @content_view.dataSource = self
     @content_view.delegate = self
     @base_view.addSubview(@content_view)
+
 
     self.view = @base_view
   end
@@ -50,7 +66,8 @@ class MainController < UIViewController
     @tumblr = TumblrEngine.alloc.initWithDelegate(self, consumerKey:configToken, consumerSecret:configTokenSecret)
 
     if @tumblr.isAuthenticated
-      @tumblr.getDashboardEntries(lambda { |thing|
+      #@tumblr.getDashboardEntries(lambda { |thing|
+      @tumblr.getBlogEntries('tedkulp.tumblr.com', onComplete:lambda { |thing|
         json = thing.responseString.to_s.objectFromJSONString
         json['response']['posts'].each do |post_data|
           new_post = createPostFromType(post_data['type'], dataHash:post_data)
