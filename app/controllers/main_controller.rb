@@ -66,8 +66,8 @@ class MainController < UIViewController
     @tumblr = TumblrEngine.alloc.initWithDelegate(self, consumerKey:configToken, consumerSecret:configTokenSecret)
 
     if @tumblr.isAuthenticated
-      #@tumblr.getDashboardEntries(lambda { |thing|
-      @tumblr.getBlogEntries('tedkulp.tumblr.com', onComplete:lambda { |thing|
+      @tumblr.getDashboardEntries(lambda { |thing|
+      #@tumblr.getBlogEntries('tedkulp.tumblr.com', onComplete:lambda { |thing|
         json = thing.responseString.to_s.objectFromJSONString
         json['response']['posts'].each do |post_data|
           new_post = createPostFromType(post_data['type'], dataHash:post_data)
