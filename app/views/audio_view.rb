@@ -1,0 +1,3 @@
+class AudioView < PostView
+
+end

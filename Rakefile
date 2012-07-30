@@ -4,7 +4,7 @@ require 'motion/project'
 require 'bundler'
 Bundler.require
 
-types = ['quote', 'photo']
+types = ['quote', 'photo', 'audio']
 
 deps = {}
 

@@ -90,6 +90,13 @@ class TumblrEngine < RSOAuthEngine
     enqueueSignedOperation(op)
   end
 
+  def getBlogEntries(blog, onComplete:completionBlock, onError:errorBlock)
+    params = {'api_key' => consumerKey}
+    op = operationWithURLString(urlWithPath("/blog/#{blog}/posts"), params:params, httpMethod:'GET')
+    op.onCompletion(completionBlock, onError:errorBlock)
+    enqueueOperation(op)
+  end
+
   def urlWithPath(path)
     'http://api.tumblr.com/v2' + path
   end
