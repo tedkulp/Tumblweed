@@ -6,35 +6,30 @@ class PhotoCell < PostCell
 
   def setupSubviewArray
     @img = UIImageView.alloc.initWithFrame(CGRectZero)
-    @blog_name = UILabel.alloc.initWithFrame(CGRectZero)
-    @caption = UILabel.alloc.initWithFrame(CGRectZero)
-    @type_img = UIImageView.alloc.initWithFrame(CGRectZero)
+    @web_view = UIWebView.alloc.init
 
-    [@img, @blog_name, @caption, @type_img]
+    [@img, @web_view]
   end
 
   def updateViewsFromPost(post)
-    @blog_name.frame = [[CELL_PADDING, CELL_PADDING], [150, 20]]
-    @blog_name.text = post.blog_name
-    @blog_name.setMinimumFontSize(16)
-    @blog_name.setFont(UIFont.systemFontOfSize(16))
-
-    @img.frame = [[CELL_PADDING, height - CELL_PADDING - IMAGE_HEIGHT - 1], [IMAGE_HEIGHT, IMAGE_HEIGHT]]
     @img.contentMode = UIViewContentModeScaleAspectFit
-    @img.image = UIImage.imageWithData(NSData.dataWithContentsOfURL(NSURL.URLWithString(post.photos[0]['alt_sizes'].last['url'])))
 
-    constraint = CGSizeMake(CELL_WIDTH - @img.frame.size.width - (CELL_PADDING * 2), IMAGE_HEIGHT.to_f);
-    size = post.caption.sizeWithFont(UIFont.systemFontOfSize(13), constrainedToSize:constraint, lineBreakMode:UILineBreakModeWordWrap)
+    width = post.photos[0]['alt_sizes'][1]['width']
+    height = post.photos[0]['alt_sizes'][1]['height']
+    @img.frame = [[self.frame.size.width / 2 - width / 2, 10], [width, height]]
 
-    @caption.text = post.caption.gsub(/<\/?[^>]*>/, '')
-    @caption.setMinimumFontSize(13)
-    @caption.setFont(UIFont.systemFontOfSize(13))
-    @caption.sizeToFit
-    @caption.frame = [[@img.frame.size.width + CELL_PADDING + CELL_PADDING, height - CELL_PADDING - IMAGE_HEIGHT - 1], [CELL_WIDTH - @img.frame.size.width + CELL_PADDING, IMAGE_HEIGHT]]
-    @caption.numberOfLines = 0
+    @img.image = UIImage.imageWithData(NSData.dataWithContentsOfURL(NSURL.URLWithString(post.photos[0]['alt_sizes'][1]['url'])))
 
-    @type_img.image = UIImage.imageWithContentsOfFile(App.resources_path + '/Photo.png')
-    @type_img.frame = [[CELL_WIDTH - @type_img.image.size.width, 0], [@type_img.image.size.width, @type_img.image.size.height]]
+    unless post.caption.empty?
+      text = "<html><head></head><body  text=\"#333\" link=\"#0000aa\" style=\"background-color: transparent; font-family: Helvetica; font-size:14px; text-align:center;\">#{post.caption}</body></html>"
+      @web_view.setOpaque(false)
+      @web_view.setBackgroundColor(UIColor.clearColor);
+      @web_view.loadHTMLString(text, baseURL:nil)
+      @web_view.frame = [[self.frame.size.width / 2 - width / 2, height + 20], [width, 200]]
+      @web_view.scrollView.scrollEnabled = false
+      @web_view.scrollView.bounces = false
+      @web_view.delegate = self
+    end
   end
 
 end
