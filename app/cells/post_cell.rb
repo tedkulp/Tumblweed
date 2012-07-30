@@ -9,6 +9,7 @@ class PostCell < UITableViewCell
     cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier)
     if cell.nil?
       cell = alloc.initWithFrame(CGRectZero)
+      cell.selectionStyle = UITableViewCellSelectionStyleNone
     end
     cell.updateViewsFromPost(post)
     cell

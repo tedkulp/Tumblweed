@@ -17,6 +17,7 @@ class PhotoCell < PostCell
     width = post.photos[0]['alt_sizes'][1]['width']
     height = post.photos[0]['alt_sizes'][1]['height']
     @img.frame = [[self.frame.size.width / 2 - width / 2, 10], [width, height]]
+    @img.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin
 
     @img.image = UIImage.imageWithData(NSData.dataWithContentsOfURL(NSURL.URLWithString(post.photos[0]['alt_sizes'][1]['url'])))
 
@@ -29,6 +30,7 @@ class PhotoCell < PostCell
       @web_view.scrollView.scrollEnabled = false
       @web_view.scrollView.bounces = false
       @web_view.delegate = self
+      @web_view.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin
     end
   end
 
