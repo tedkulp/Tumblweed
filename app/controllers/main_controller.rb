@@ -130,6 +130,16 @@ class MainController < UIViewController
 
   #--------
 
+  def tumblrEngineNeedsAuthentication(engine)
+    p 'needs auth'
+  end
+
+  def tumblrEngine(engine, statusUpdate:message)
+    p 'status update: ' + message
+  end
+
+  #--------
+
   def createPostFromType(type, dataHash:post_data)
     begin
       klass = Object.const_get(type.capitalize)
