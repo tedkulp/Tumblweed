@@ -20,7 +20,7 @@ class PostCell < UITableViewCell
     updateViewsFromPost(post)
     subviews.flatten.collect { |a_view|
       a_view.frame.origin.y + a_view.frame.size.height
-    }.max
+    }.max + 10
   end
 
   def self.reuseIdentifier
@@ -58,7 +58,12 @@ class PostCell < UITableViewCell
   end
 
   def setupSubviewArray
-    #TODO: Some kind of generic display
+    @header_block = UIView.alloc.initWithFrame(CGRectZero)
+    @blog_name = UILabel.alloc.initWithFrame(CGRectZero)
+    @avatar_img = UIImageView.alloc.initWithFrame(CGRectZero)
+    @post_time = UILabel.alloc.initWithFrame(CGRectZero)
+
+    [@header_block, @blog_name, @avatar_img, @post_time]
   end
 
   def prepareForReuse
@@ -66,7 +71,30 @@ class PostCell < UITableViewCell
   end
 
   def updateViewsFromPost(post)
-    #TODO: Fill in said generic display
+    @header_block.frame = [[0, 0], [@header_block.superview.frame.size.width, 48]]
+    @header_block.backgroundColor = UIColor.whiteColor
+    @header_block.autoresizingMask = UIViewAutoresizingFlexibleWidth
+
+    size = post.blog_name.sizeWithFont(UIFont.systemFontOfSize(16))
+    @blog_name.frame = [[50, 0], [size.width, size.height]]
+    @blog_name.text = post.blog_name
+    @blog_name.setLineBreakMode(UILineBreakModeWordWrap)
+    @blog_name.setMinimumFontSize(16)
+    @blog_name.setFont(UIFont.systemFontOfSize(16))
+    @blog_name.numberOfLines = 0
+
+    post_date = "Posted: " + Time.at(post.timestamp).strftime('%B %d, %Y %I:%M %p')
+    size = post_date.sizeWithFont(UIFont.systemFontOfSize(14))
+    @post_time.frame = [[50, 48 - size.height - 1], [size.width, size.height]]
+    @post_time.text = post_date
+    @post_time.setLineBreakMode(UILineBreakModeWordWrap)
+    @post_time.setMinimumFontSize(14)
+    @post_time.setFont(UIFont.systemFontOfSize(14))
+    @post_time.numberOfLines = 0
+
+    @avatar_img.frame = [[0, 0], [48, 48]]
+    url = "http://api.tumblr.com/v2/blog/#{post.blog_name}.tumblr.com/avatar/48"
+    @avatar_img.setImageWithURL(NSURL.URLWithString(url, placeholderImage:UIImage.imageNamed("placeholder.png")))
   end
 
   def layoutSubviews

@@ -9,27 +9,26 @@ class QuoteCell < PostCell
     @caption = UILabel.alloc.initWithFrame(CGRectZero)
     @type_img = UIImageView.alloc.initWithFrame(CGRectZero)
 
-    [@blog_name, @caption, @type_img]
+    super + [@caption]
   end
 
   def updateViewsFromPost(post)
-    @blog_name.frame = [[CELL_PADDING, CELL_PADDING], [150, 20]]
-    @blog_name.text = post.blog_name
-    @blog_name.setMinimumFontSize(16)
-    @blog_name.setFont(UIFont.systemFontOfSize(16))
+    super
 
-    constraint = CGSizeMake(width - (CELL_PADDING * 2), IMAGE_HEIGHT.to_f);
-    size = post.text.sizeWithFont(UIFont.systemFontOfSize(12), constrainedToSize:constraint, lineBreakMode:UILineBreakModeWordWrap)
+    text = ['"', post.text, '"'].join.gsub(/<\/?[^>]*>/, '')
+    size = text.sizeWithFont(UIFont.fontWithName("AmericanTypewriter", size:24), constrainedToSize:[550, 500], lineBreakMode:UILineBreakModeWordWrap)
 
-    @caption.text = post.text.gsub(/<\/?[^>]*>/, '')
-    @caption.setLineBreakMode(UILineBreakModeWordWrap)
-    @caption.setMinimumFontSize(12)
-    @caption.setFont(UIFont.systemFontOfSize(12))
-    @caption.frame = [[CELL_PADDING, height - CELL_PADDING - IMAGE_HEIGHT - 1], [width - (CELL_PADDING * 2), [IMAGE_HEIGHT - CELL_PADDING, size.height].max]]
+    @caption.text = text
+    #@caption.setLineBreakMode(UILineBreakModeWordWrap)
+    @caption.setMinimumFontSize(24)
+    @caption.setFont(UIFont.fontWithName("AmericanTypewriter", size:24))
+    @caption.backgroundColor = UIColor.clearColor
+    @caption.opaque = false
+    @caption.textAlignment = UITextAlignmentCenter
     @caption.numberOfLines = 0
-
-    @type_img.image = UIImage.imageWithContentsOfFile(App.resources_path + '/Quote.png')
-    @type_img.frame = [[width - @type_img.image.size.width, 0], [@type_img.image.size.width, @type_img.image.size.height]]
+    @caption.lineBreakMode = UILineBreakModeWordWrap
+    @caption.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin
+    @caption.frame = [[self.frame.size.width / 2 - size.width / 2, 60], [size.width, size.height]]
   end
 
 end

@@ -2,6 +2,11 @@ class AppDelegate
   attr_accessor :window
 
   def application(application, didFinishLaunchingWithOptions:launchOptions)
+    UIFont.familyNames.each do |family_name|
+      puts "Family: #{family_name}"
+      p UIFont.fontNamesForFamilyName(family_name)
+    end
+
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
 
     # Setup our custom controllers. One overarching controller
