@@ -30,6 +30,11 @@ Motion::Project::App.setup do |app|
     'tokenSecret' => 'T5N6v5LQ9130GIuvjJVK5FgmJqcF2Jj3fj99Xyyk4QH0tYNdYv'
   }
 
+  app.vendor_project('vendor/SDWebImage',
+                     :xcode,
+                     :headers_dir => 'SDWebImage',
+                     :target => 'SDWebImage ARC')
+
   types.each do |type|
     app.files_dependencies "./app/models/#{type}.rb" => './app/models/post.rb'
     app.files_dependencies "./app/cells/#{type}_cell.rb" => './app/cells/post_cell.rb'
