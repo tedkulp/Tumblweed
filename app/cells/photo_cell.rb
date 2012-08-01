@@ -49,9 +49,4 @@ class PhotoCell < PostCell
     p webView.frame
   end
 
-  def rtLabel(label, didSelectLinkWithURL:href)
-    p label
-    p href
-  end
-
 end

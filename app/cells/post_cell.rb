@@ -108,4 +108,10 @@ class PostCell < UITableViewCell
   def reuseIdentifier
     self.class.reuseIdentifier
   end
+
+  def rtLabel(label, didSelectLinkWithURL:href)
+    p label
+    p href
+  end
+
 end
