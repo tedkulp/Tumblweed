@@ -43,10 +43,4 @@ class PhotoCell < PostCell
 
   end
 
-  def webViewDidFinishLoad(webView)
-    fitting_size = webView.sizeThatFits(CGSizeZero)
-    webView.frame.size = fitting_size
-    p webView.frame
-  end
-
 end

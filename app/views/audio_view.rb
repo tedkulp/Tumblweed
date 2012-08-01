@@ -1,3 +1,0 @@
-class AudioView < PostView
-
-end

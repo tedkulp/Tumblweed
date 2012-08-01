@@ -4,7 +4,7 @@ require 'motion/project'
 require 'bundler'
 Bundler.require
 
-types = ['quote', 'photo', 'audio']
+types = ['quote', 'photo', 'audio', 'video']
 
 deps = {}
 
@@ -14,6 +14,7 @@ Motion::Project::App.setup do |app|
   app.identifier    = 'net.shiftrefresh.tumblweed'
   app.device_family = :ipad
   app.frameworks    << 'Security'
+  app.frameworks    << 'MediaPlayer'
 
   app.pods do
     pod 'RSOAuthEngine'
@@ -36,7 +37,6 @@ Motion::Project::App.setup do |app|
   types.each do |type|
     app.files_dependencies "./app/models/#{type}.rb" => './app/models/post.rb'
     app.files_dependencies "./app/cells/#{type}_cell.rb" => './app/cells/post_cell.rb'
-    app.files_dependencies "./app/views/#{type}_view.rb" => './app/views/post_view.rb'
     app.files_dependencies './app/controllers/subject_controller.rb' => "./app/models/#{type}.rb"
     app.files_dependencies './app/controllers/subject_controller.rb' => "./app/cells/#{type}_cell.rb"
   end

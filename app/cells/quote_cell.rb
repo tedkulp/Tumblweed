@@ -5,9 +5,7 @@ class QuoteCell < PostCell
   end
 
   def setupSubviewArray
-    @blog_name = UILabel.alloc.initWithFrame(CGRectZero)
     @caption = UILabel.alloc.initWithFrame(CGRectZero)
-    @type_img = UIImageView.alloc.initWithFrame(CGRectZero)
     @source = RCLabel.alloc.initWithFrame(CGRectZero)
 
     super + [@caption, @source]
@@ -20,7 +18,6 @@ class QuoteCell < PostCell
     size = text.sizeWithFont(UIFont.fontWithName(post.font, size:24), constrainedToSize:[550, 500], lineBreakMode:UILineBreakModeWordWrap)
 
     @caption.text = text
-    #@caption.setLineBreakMode(UILineBreakModeWordWrap)
     @caption.setMinimumFontSize(24)
     @caption.setFont(UIFont.fontWithName(post.font, size:24))
     @caption.backgroundColor = UIColor.clearColor
